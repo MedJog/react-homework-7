@@ -1,23 +1,33 @@
-import logo from './logo.svg';
+
 import './App.css';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchTasks } from './features/tasksSlice';
 
 function App() {
+
+  const dispatch = useDispatch();
+  const { tasks, loading } = useSelector((state) => state.tasks);
+
+  useEffect(() => {
+    dispatch(fetchTasks());
+  }, [dispatch]);
+
+  if (loading) {
+    return <div>Загрузка...</div>;
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+     <h1 className="Title">Список задач</h1>
+      <ul>
+        {tasks.map((task) => (
+          <li className="List-item" key={task.id}>
+            {task.title} 
+            <span className="Item-completed">{task.completed ? 'задача выполнена' : ''}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
